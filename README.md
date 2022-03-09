@@ -7,3 +7,9 @@ Performance test between JSONDecoder, IkigaJSON and ZippyJSON
 ```
 swift test
 ```
+
+in release mode:
+
+```
+swift test -c release -Xswiftc -enable-testing
+```
