@@ -1,6 +1,15 @@
 // From https://stackoverflow.com/questions/28016578/how-can-i-parse-create-a-date-time-stamp-formatted-with-fractional-seconds-utc
 
 import Foundation
+import JJLISO8601DateFormatter
+import ZippyJSON
+
+fileprivate var _iso8601withFractionalSeconds: JJLISO8601DateFormatter = {
+    let formatter = JJLISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    return formatter
+}()
+
 
 extension ISO8601DateFormatter {
     convenience init(_ formatOptions: Options) {
@@ -10,7 +19,7 @@ extension ISO8601DateFormatter {
 }
 
 extension Formatter {
-    static let iso8601withFractionalSeconds = ISO8601DateFormatter([.withInternetDateTime, .withFractionalSeconds])
+    static let iso8601withFractionalSeconds = _iso8601withFractionalSeconds
     static let iso8601 = ISO8601DateFormatter()
 }
 
@@ -43,6 +52,18 @@ extension String {
 }
 
 extension JSONDecoder.DateDecodingStrategy {
+    static let iso8601withFractionalSeconds = custom {
+        let container = try $0.singleValueContainer()
+        let string = try container.decode(String.self)
+        guard let date = (Formatter.iso8601withFractionalSeconds.date(from: string) ?? Formatter.iso8601.date(from: string)) else {
+            throw DecodingError.dataCorruptedError(in: container,
+                  debugDescription: "Invalid date: " + string)
+        }
+        return date
+    }
+}
+
+extension ZippyJSONDecoder.DateDecodingStrategy {
     static let iso8601withFractionalSeconds = custom {
         let container = try $0.singleValueContainer()
         let string = try container.decode(String.self)

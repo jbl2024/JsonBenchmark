@@ -11,7 +11,7 @@ class DecoderFactory {
 
     static func zippyJSONDecoder() -> ZippyJSONDecoder {
         let decoder = ZippyJSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(ISO8601withFractionalSeconds())
+        decoder.dateDecodingStrategy = .iso8601withFractionalSeconds
         return decoder
     }
     
