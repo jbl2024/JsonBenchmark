@@ -6,13 +6,14 @@ struct SampleObject: Decodable, CustomStringConvertible {
     
     let data: String
     let dataUrl: String?
+    let privateKeySignature: String?
     let checksum: String
     
     let createdAt: Date?
     let updatedAt: Date?
     let receivedAt: Date?
     let deletedAt: Date?
-    
+
     var description: String {
         return "\(self.id)"
     }
